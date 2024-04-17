@@ -1,19 +1,20 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
 import {
+  ActivityIndicator,
   GestureResponderEvent,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native'
 import { RootStackParamList } from '../types/navigation'
-import { MovieQueryType, useMoviesQuery } from '../hooks/tmdb/useMoviesQuery'
+import * as tmdb from '../hooks/tmdb'
 
 export const MovieListScreen: React.FC<
   NativeStackScreenProps<RootStackParamList, 'Home'>
 > = ({ navigation }) => {
-  const { data, isLoading, isSuccess, error } = useMoviesQuery(
-    MovieQueryType.NowPlaying,
+  const { data, isLoading, isSuccess } = tmdb.useMoviesQuery(
+    tmdb.MovieQueryType.NowPlaying,
     1,
   )
 
@@ -24,13 +25,8 @@ export const MovieListScreen: React.FC<
     }
 
   if (isLoading || !isSuccess) {
-    console.log({ error })
     return (
-      <View>
-        <Text>
-          {isLoading ? 'Loading...' : error?.status_message || 'Unknown error'}
-        </Text>
-      </View>
+      <View>{isLoading ? <ActivityIndicator /> : <Text>Error!</Text>}</View>
     )
   }
 

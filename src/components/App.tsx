@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from 'react-query'
 import { MovieListScreen } from './MovieListScreen'
 import { MovieDetailScreen } from './MovieDetailScreen'
 import { RootStackParamList } from '../types/navigation'
+import { TMDBContextProvider } from '../context/tmdb'
 
 const StackNavigator = createStackNavigator<RootStackParamList>()
 
@@ -15,14 +16,19 @@ export const App: React.FC = () => {
   return (
     <>
       <StatusBar barStyle="default" />
-      <NavigationContainer>
-        <QueryClientProvider client={queryClient}>
-          <StackNavigator.Navigator initialRouteName="Home">
-            <StackNavigator.Screen name="Home" component={MovieListScreen} />
-            <StackNavigator.Screen name="Movie" component={MovieDetailScreen} />
-          </StackNavigator.Navigator>
-        </QueryClientProvider>
-      </NavigationContainer>
+      <QueryClientProvider client={queryClient}>
+        <TMDBContextProvider>
+          <NavigationContainer>
+            <StackNavigator.Navigator initialRouteName="Home">
+              <StackNavigator.Screen name="Home" component={MovieListScreen} />
+              <StackNavigator.Screen
+                name="Movie"
+                component={MovieDetailScreen}
+              />
+            </StackNavigator.Navigator>
+          </NavigationContainer>
+        </TMDBContextProvider>
+      </QueryClientProvider>
     </>
   )
 }
