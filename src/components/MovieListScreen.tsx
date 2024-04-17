@@ -9,6 +9,7 @@ import {
 } from 'react-native'
 import { RootStackParamList } from '../types/navigation'
 import * as tmdb from '../hooks/tmdb'
+import { TMDBMoviesListItem } from '../types/tmdb'
 
 export const MovieListScreen: React.FC<
   NativeStackScreenProps<RootStackParamList, 'Home'>
@@ -19,9 +20,9 @@ export const MovieListScreen: React.FC<
   )
 
   const createOnPressMovie =
-    (id: number) =>
+    (movie: TMDBMoviesListItem) =>
     (_: GestureResponderEvent): void => {
-      navigation.navigate('Movie', { movieId: id })
+      navigation.navigate('Movie', { movie })
     }
 
   if (isLoading || !isSuccess) {
@@ -37,7 +38,7 @@ export const MovieListScreen: React.FC<
         return (
           <TouchableOpacity
             key={`movie-list-item-${id}`}
-            onPress={createOnPressMovie(id)}>
+            onPress={createOnPressMovie(movieListItem)}>
             <View>
               <Text>{title}</Text>
             </View>

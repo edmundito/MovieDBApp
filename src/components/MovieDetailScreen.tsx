@@ -17,8 +17,8 @@ const windowDimensions = Dimensions.get('window')
 export const MovieDetailScreen: React.FC<
   NativeStackScreenProps<RootStackParamList, 'Movie'>
 > = ({ route }) => {
-  const { movieId } = route?.params ?? {}
-  const { data, isLoading, isSuccess } = tmdb.useMovieDetailsQuery(movieId)
+  const { movie } = route?.params ?? {}
+  const { data, isLoading, isSuccess } = tmdb.useMovieDetailsQuery(movie.id)
   const { getTMDBImageURL } = useTMDBContext()
   const [imageSize, setImageSize] = useState<{
     width: number

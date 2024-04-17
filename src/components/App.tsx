@@ -20,10 +20,17 @@ export const App: React.FC = () => {
         <TMDBContextProvider>
           <NavigationContainer>
             <StackNavigator.Navigator initialRouteName="Home">
-              <StackNavigator.Screen name="Home" component={MovieListScreen} />
+              <StackNavigator.Screen
+                name="Home"
+                component={MovieListScreen}
+                options={{ title: 'Popular Movies' }}
+              />
               <StackNavigator.Screen
                 name="Movie"
                 component={MovieDetailScreen}
+                options={({ route }) => ({
+                  title: route.params.movie.title,
+                })}
               />
             </StackNavigator.Navigator>
           </NavigationContainer>
