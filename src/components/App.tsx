@@ -5,11 +5,7 @@ import { StatusBar } from 'react-native'
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { MovieListScreen } from './MovieListScreen'
 import { MovieDetailScreen } from './MovieDetailScreen'
-
-type RootStackParamList = {
-  Home: undefined
-  Movie: undefined
-}
+import { RootStackParamList } from '../types/navigation'
 
 const StackNavigator = createStackNavigator<RootStackParamList>()
 

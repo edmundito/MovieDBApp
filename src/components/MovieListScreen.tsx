@@ -6,11 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native'
-
-type RootStackParamList = {
-  Home: undefined
-  Movie: undefined
-}
+import { RootStackParamList } from '../types/navigation'
 
 export const MovieListScreen: React.FC<
   NativeStackScreenProps<RootStackParamList, 'Home'>
