@@ -1,5 +1,5 @@
 import { NavigationContainer } from '@react-navigation/native'
-import { createStackNavigator } from '@react-navigation/stack'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import React from 'react'
 import { StatusBar } from 'react-native'
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -8,7 +8,7 @@ import { MovieDetailScreen } from './MovieDetailScreen'
 import { RootStackParamList } from '../types/navigation'
 import { TMDBContextProvider } from '../context/tmdb'
 
-const StackNavigator = createStackNavigator<RootStackParamList>()
+const NativeStackNavigator = createNativeStackNavigator<RootStackParamList>()
 
 const queryClient = new QueryClient()
 
@@ -19,20 +19,20 @@ export const App: React.FC = () => {
       <QueryClientProvider client={queryClient}>
         <TMDBContextProvider>
           <NavigationContainer>
-            <StackNavigator.Navigator initialRouteName="Home">
-              <StackNavigator.Screen
+            <NativeStackNavigator.Navigator initialRouteName="Home">
+              <NativeStackNavigator.Screen
                 name="Home"
                 component={MovieListScreen}
                 options={{ title: 'Popular Movies' }}
               />
-              <StackNavigator.Screen
+              <NativeStackNavigator.Screen
                 name="Movie"
                 component={MovieDetailScreen}
                 options={({ route }) => ({
                   title: route.params.movie.title,
                 })}
               />
-            </StackNavigator.Navigator>
+            </NativeStackNavigator.Navigator>
           </NavigationContainer>
         </TMDBContextProvider>
       </QueryClientProvider>
