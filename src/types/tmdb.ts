@@ -4,6 +4,14 @@ export interface TMDBError {
   success: boolean
 }
 
+export const enum TMDBImageType {
+  Backdrop = 'backdrop',
+  Logo = 'logo',
+  Poster = 'poster',
+  Profile = 'profile',
+  Still = 'still',
+}
+
 export interface TMDBConfigurationImages {
   base_url: string
   secure_base_url: string

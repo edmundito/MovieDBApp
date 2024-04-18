@@ -5,14 +5,22 @@ import {
   GestureResponderEvent,
   ScrollView,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native'
 import { RootStackParamList } from '../types/navigation'
 import * as tmdb from '../hooks/tmdb'
-import { TMDBMoviesListItem } from '../types/tmdb'
+import { TMDBImageType, TMDBMoviesListItem } from '../types/tmdb'
 import { List } from 'react-native-paper'
-import { useTMDBContext } from '../context/tmdb'
+
+interface MovieListItemProps {
+  posterPath: string
+}
+
+const MovieListItem: React.FC<MovieListItemProps> = ({ posterPath }) => {
+  const uri = tmdb.useImageURI(posterPath, TMDBImageType.Poster, 56)
+
+  return <List.Image source={{ uri }} />
+}
 
 export const MovieListScreen: React.FC<
   NativeStackScreenProps<RootStackParamList, 'Home'>
@@ -21,8 +29,6 @@ export const MovieListScreen: React.FC<
     tmdb.MovieQueryType.NowPlaying,
     1,
   )
-
-  const { getTMDBImageURL } = useTMDBContext()
 
   const createOnPressMovie =
     (movie: TMDBMoviesListItem) =>
@@ -47,10 +53,7 @@ export const MovieListScreen: React.FC<
             onPress={createOnPressMovie(movieListItem)}
             // eslint-disable-next-line react/no-unstable-nested-components
             left={props => (
-              <List.Image
-                {...props}
-                source={{ uri: getTMDBImageURL(poster_path) }}
-              />
+              <MovieListItem {...props} posterPath={poster_path} />
             )}
           />
         )
