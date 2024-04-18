@@ -11,6 +11,7 @@ import { RootStackParamList } from '../types/navigation'
 import * as tmdb from '../hooks/tmdb'
 import { TMDBImageType } from '../types/tmdb'
 import { Text } from 'react-native-paper'
+import { SafeAreaView } from 'react-native-safe-area-context'
 
 const windowDimensions = Dimensions.get('window')
 
@@ -18,12 +19,12 @@ export const MovieDetailScreen: React.FC<
   NativeStackScreenProps<RootStackParamList, 'Movie'>
 > = ({ route }) => {
   const { movie } = route?.params ?? {}
+
   const { data, isLoading, isSuccess } = tmdb.useMovieDetailsQuery(movie.id)
   const [imageSize, setImageSize] = useState<{
     width: number
     height: number
   }>()
-
   const posterImageURL = tmdb.useImageURI(
     data?.poster_path,
     TMDBImageType.Poster,
@@ -58,9 +59,13 @@ export const MovieDetailScreen: React.FC<
       ) : (
         <ActivityIndicator />
       )}
-      <Text variant="titleLarge">{title}</Text>
-      <Text variant="titleSmall">{tagline}</Text>
-      <Text variant="bodyMedium">{overview}</Text>
+      <SafeAreaView>
+        <View style={{ padding: 12 }}>
+          <Text variant="titleLarge">{title}</Text>
+          {tagline && <Text variant="titleSmall">{tagline}</Text>}
+          <Text variant="bodyMedium">{overview}</Text>
+        </View>
+      </SafeAreaView>
     </ScrollView>
   )
 }
