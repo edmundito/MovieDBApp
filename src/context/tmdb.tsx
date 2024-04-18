@@ -3,6 +3,7 @@ import { PropsWithChildren, createContext, useContext } from 'react'
 import * as tmdb from '../hooks/tmdb'
 import { TMDBConfiguration } from '../types/tmdb'
 import { Text, View } from 'react-native'
+import { LoadingView } from '../components/LoadingView'
 
 interface TMDBContext {
   configuration: TMDBConfiguration
@@ -22,14 +23,15 @@ export const useTMDBContext = (): TMDBContext => {
 export const TMDBContextProvider: React.FC<PropsWithChildren> = ({
   children,
 }) => {
-  const { data: configuration, isLoading, isSuccess } = tmdb.useConfiguration()
+  const {
+    data: configuration,
+    isLoading,
+    isSuccess,
+    isError,
+  } = tmdb.useConfiguration()
 
-  if (isLoading || !isSuccess) {
-    return (
-      <View>
-        <Text>Loading...</Text>
-      </View>
-    )
+  if (isLoading || !isSuccess || isError) {
+    return <LoadingView hasError={isError} />
   }
 
   return (

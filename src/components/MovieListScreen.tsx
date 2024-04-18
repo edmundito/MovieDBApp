@@ -1,16 +1,11 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
-import {
-  ActivityIndicator,
-  GestureResponderEvent,
-  ScrollView,
-  Text,
-  View,
-} from 'react-native'
+import { GestureResponderEvent, ScrollView, Text, View } from 'react-native'
+import { ActivityIndicator, List } from 'react-native-paper'
 import { RootStackParamList } from '../types/navigation'
 import * as tmdb from '../hooks/tmdb'
 import { TMDBImageType, TMDBMoviesListItem } from '../types/tmdb'
-import { List } from 'react-native-paper'
+import { LoadingView } from './LoadingView'
 
 interface MovieListItemProps {
   posterPath: string
@@ -25,7 +20,7 @@ const MovieListItem: React.FC<MovieListItemProps> = ({ posterPath }) => {
 export const MovieListScreen: React.FC<
   NativeStackScreenProps<RootStackParamList, 'Home'>
 > = ({ navigation }) => {
-  const { data, isLoading, isSuccess } = tmdb.useMoviesQuery(
+  const { data, isLoading, isSuccess, isError } = tmdb.useMoviesQuery(
     tmdb.MovieQueryType.NowPlaying,
     1,
   )
@@ -36,10 +31,8 @@ export const MovieListScreen: React.FC<
       navigation.navigate('Movie', { movie })
     }
 
-  if (isLoading || !isSuccess) {
-    return (
-      <View>{isLoading ? <ActivityIndicator /> : <Text>Error!</Text>}</View>
-    )
+  if (isLoading || !isSuccess || isError) {
+    return <LoadingView hasError={isError} />
   }
 
   return (

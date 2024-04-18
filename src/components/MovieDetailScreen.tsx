@@ -1,17 +1,12 @@
 import React, { useState } from 'react'
-import {
-  Image,
-  View,
-  ScrollView,
-  Dimensions,
-  ActivityIndicator,
-} from 'react-native'
+import { Image, View, ScrollView, Dimensions } from 'react-native'
+import { ActivityIndicator, Text } from 'react-native-paper'
+import { SafeAreaView } from 'react-native-safe-area-context'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from '../types/navigation'
 import * as tmdb from '../hooks/tmdb'
 import { TMDBImageType } from '../types/tmdb'
-import { Text } from 'react-native-paper'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { LoadingView } from './LoadingView'
 
 const windowDimensions = Dimensions.get('window')
 
@@ -20,7 +15,9 @@ export const MovieDetailScreen: React.FC<
 > = ({ route }) => {
   const { movie } = route?.params ?? {}
 
-  const { data, isLoading, isSuccess } = tmdb.useMovieDetailsQuery(movie.id)
+  const { data, isLoading, isSuccess, isError } = tmdb.useMovieDetailsQuery(
+    movie.id,
+  )
   const [imageSize, setImageSize] = useState<{
     width: number
     height: number
@@ -31,10 +28,8 @@ export const MovieDetailScreen: React.FC<
     windowDimensions.width,
   )
 
-  if (isLoading || !isSuccess) {
-    return (
-      <View>{isLoading ? <ActivityIndicator /> : <Text>Error!</Text>}</View>
-    )
+  if (isLoading || !isSuccess || isError) {
+    return <LoadingView hasError={isError} />
   }
 
   const { title, tagline, overview } = data
