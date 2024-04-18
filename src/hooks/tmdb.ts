@@ -1,4 +1,4 @@
-import { useQuery } from 'react-query'
+import { useInfiniteQuery, useQuery } from 'react-query'
 import { tmdbAPI } from '../instances/tmdbAPI'
 import type {
   TMDBConfiguration,
@@ -23,13 +23,32 @@ export const useConfiguration = () =>
   })
 
 export const useMoviesQuery = (type: MovieQueryType, page: number) =>
-  useQuery(['movies', type, page], async () => {
-    const { data } = await tmdbAPI.get<TMDBMoviesList>(`/movie/${type}`, {
-      params: {
-        page,
-      },
-    })
-    return data
+  useQuery(
+    ['movies', type, page],
+    async () => {
+      const { data } = await tmdbAPI.get<TMDBMoviesList>(`/movie/${type}`, {
+        params: {
+          page,
+        },
+      })
+      return data
+    },
+    { keepPreviousData: true },
+  )
+
+export const useMoviesInfiniteQuery = (type: MovieQueryType) =>
+  useInfiniteQuery({
+    queryKey: ['movies', type],
+    queryFn: async ({ pageParam = 1 }) => {
+      const { data } = await tmdbAPI.get<TMDBMoviesList>(`/movie/${type}`, {
+        params: {
+          page: pageParam,
+        },
+      })
+      return data
+    },
+    getNextPageParam: page => page.page + 1,
+    getPreviousPageParam: page => page.page - 1,
   })
 
 export const useMovieDetailsQuery = (movieId: number) =>

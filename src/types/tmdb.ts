@@ -53,6 +53,8 @@ export interface TMDBMoviesList {
   dates: TMDBDateRange
   page: number
   results: TMDBMoviesListItem[]
+  total_pages: number
+  total_results: number
 }
 
 export interface TMDBMovieDetails {
