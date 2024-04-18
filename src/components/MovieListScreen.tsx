@@ -3,6 +3,7 @@ import React from 'react'
 import {
   ActivityIndicator,
   GestureResponderEvent,
+  ScrollView,
   Text,
   TouchableOpacity,
   View,
@@ -10,6 +11,8 @@ import {
 import { RootStackParamList } from '../types/navigation'
 import * as tmdb from '../hooks/tmdb'
 import { TMDBMoviesListItem } from '../types/tmdb'
+import { List } from 'react-native-paper'
+import { useTMDBContext } from '../context/tmdb'
 
 export const MovieListScreen: React.FC<
   NativeStackScreenProps<RootStackParamList, 'Home'>
@@ -18,6 +21,8 @@ export const MovieListScreen: React.FC<
     tmdb.MovieQueryType.NowPlaying,
     1,
   )
+
+  const { getTMDBImageURL } = useTMDBContext()
 
   const createOnPressMovie =
     (movie: TMDBMoviesListItem) =>
@@ -32,19 +37,24 @@ export const MovieListScreen: React.FC<
   }
 
   return (
-    <View>
+    <ScrollView>
       {data.results.map(movieListItem => {
-        const { id, title } = movieListItem
+        const { id, title, poster_path } = movieListItem
         return (
-          <TouchableOpacity
+          <List.Item
             key={`movie-list-item-${id}`}
-            onPress={createOnPressMovie(movieListItem)}>
-            <View>
-              <Text>{title}</Text>
-            </View>
-          </TouchableOpacity>
+            title={title}
+            onPress={createOnPressMovie(movieListItem)}
+            // eslint-disable-next-line react/no-unstable-nested-components
+            left={props => (
+              <List.Image
+                {...props}
+                source={{ uri: getTMDBImageURL(poster_path) }}
+              />
+            )}
+          />
         )
       })}
-    </View>
+    </ScrollView>
   )
 }
