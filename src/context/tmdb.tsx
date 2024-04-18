@@ -2,7 +2,6 @@ import React from 'react'
 import { PropsWithChildren, createContext, useContext } from 'react'
 import * as tmdb from '../hooks/tmdb'
 import { TMDBConfiguration } from '../types/tmdb'
-import { Text, View } from 'react-native'
 import { LoadingView } from '../components/LoadingView'
 
 interface TMDBContext {
