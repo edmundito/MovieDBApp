@@ -7,6 +7,7 @@ import { RootStackParamList } from '../types/navigation'
 import * as tmdb from '../hooks/tmdb'
 import { TMDBImageType } from '../types/tmdb'
 import { LoadingView } from './LoadingView'
+import { getTMDBMovieTitle } from '../utils/tmdb'
 
 export const MovieDetailScreen: React.FC<
   NativeStackScreenProps<RootStackParamList, 'Movie'>
@@ -32,7 +33,7 @@ export const MovieDetailScreen: React.FC<
     return <LoadingView hasError={isError} />
   }
 
-  const { title, tagline, overview } = data
+  const { tagline, overview } = data
 
   if (posterImageURL) {
     Image.getSize(posterImageURL, (width, height) => {
@@ -56,7 +57,7 @@ export const MovieDetailScreen: React.FC<
       )}
       <SafeAreaView>
         <View style={{ padding: 12 }}>
-          <Text variant="titleLarge">{title}</Text>
+          <Text variant="titleLarge">{getTMDBMovieTitle(data)}</Text>
           {tagline && <Text variant="titleSmall">{tagline}</Text>}
           <Text variant="bodyMedium">{overview}</Text>
         </View>

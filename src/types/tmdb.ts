@@ -27,10 +27,9 @@ export interface TMDBConfiguration {
   change_keys: string[]
 }
 
-export interface TMDBMoviesListItem {
+export interface TMDBMovie {
   adult: boolean
   backdrop_path: string
-  genre_ids: number[]
   id: number
   original_language: string
   original_title: string
@@ -42,6 +41,10 @@ export interface TMDBMoviesListItem {
   video: boolean
   vote_average: number
   vote_count: number
+}
+
+export interface TMDBMoviesListItem extends TMDBMovie {
+  genre_ids: number[]
 }
 
 export interface TMDBDateRange {
@@ -57,9 +60,7 @@ export interface TMDBMoviesList {
   total_results: number
 }
 
-export interface TMDBMovieDetails {
-  adult: false
-  backdrop_path: string
+export interface TMDBMovieDetails extends TMDBMovie {
   belongs_to_collection: {
     id: number
     name: string
@@ -73,21 +74,14 @@ export interface TMDBMovieDetails {
   }[]
 
   homepage: string
-  id: number
   imdb_id: string
   origin_country: string[]
-  original_language: string
-  original_title: string
-  overview: string
-  popularity: number
-  poster_path: string
   production_companies: {
     id: number
     logo_path: string
     name: string
     origin_country: string
   }[]
-
   production_countries: {
     iso_3166_1: string
     name: string
@@ -102,8 +96,4 @@ export interface TMDBMovieDetails {
   }[]
   status: string // TODO: Probably an enum - 'Released' is what we know so far
   tagline: string
-  title: string
-  video: boolean
-  vote_average: number
-  vote_count: number
 }

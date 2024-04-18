@@ -7,6 +7,7 @@ import * as tmdb from '../hooks/tmdb'
 import { TMDBImageType, TMDBMoviesListItem } from '../types/tmdb'
 import { LoadingView } from './LoadingView'
 import { FlatList } from 'react-native-gesture-handler'
+import { getTMDBMovieTitle } from '../utils/tmdb'
 
 interface MovieListItemProps {
   posterPath: string
@@ -43,10 +44,10 @@ export const MovieListScreen: React.FC<
     <FlatList
       data={items}
       keyExtractor={({ id }, index) => `movie-list-item-${id}-${index}`}
-      renderItem={({ item, item: { title, poster_path } }) => {
+      renderItem={({ item, item: { poster_path } }) => {
         return (
           <List.Item
-            title={title}
+            title={getTMDBMovieTitle(item)}
             onPress={createOnPressMovie(item)}
             // eslint-disable-next-line react/no-unstable-nested-components
             left={props => (

@@ -52,10 +52,14 @@ export const useMoviesInfiniteQuery = (type: MovieQueryType) =>
   })
 
 export const useMovieDetailsQuery = (movieId: number) =>
-  useQuery(['movie', movieId], async () => {
-    const { data } = await tmdbAPI.get<TMDBMovieDetails>(`/movie/${movieId}`)
-    return data
-  })
+  useQuery(
+    ['movie', movieId],
+    async () => {
+      const { data } = await tmdbAPI.get<TMDBMovieDetails>(`/movie/${movieId}`)
+      return data
+    },
+    { keepPreviousData: true },
+  )
 
 const getImageSizeFromWidth = (
   imageSizes: string[] | undefined,
