@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Image, View, ScrollView, Dimensions } from 'react-native'
+import { Image, View, ScrollView, useWindowDimensions } from 'react-native'
 import { ActivityIndicator, Text } from 'react-native-paper'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import type { NativeStackScreenProps } from '@react-navigation/native-stack'
@@ -8,12 +8,12 @@ import * as tmdb from '../hooks/tmdb'
 import { TMDBImageType } from '../types/tmdb'
 import { LoadingView } from './LoadingView'
 
-const windowDimensions = Dimensions.get('window')
-
 export const MovieDetailScreen: React.FC<
   NativeStackScreenProps<RootStackParamList, 'Movie'>
 > = ({ route }) => {
   const { movie } = route?.params ?? {}
+
+  const windowDimensions = useWindowDimensions()
 
   const { data, isLoading, isSuccess, isError } = tmdb.useMovieDetailsQuery(
     movie.id,
