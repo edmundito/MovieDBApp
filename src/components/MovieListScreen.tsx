@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useMemo } from 'react'
-import { GestureResponderEvent } from 'react-native'
-import { List } from 'react-native-paper'
+import { GestureResponderEvent, View } from 'react-native'
+import { ActivityIndicator, List } from 'react-native-paper'
 import { RootStackParamList } from '../types/navigation'
 import * as tmdb from '../hooks/tmdb'
 import { TMDBImageType, TMDBMoviesListItem } from '../types/tmdb'
@@ -22,12 +22,28 @@ const MovieListItem: React.FC<MovieListItemProps> = ({ posterPath }) => {
 export const MovieListScreen: React.FC<
   NativeStackScreenProps<RootStackParamList, 'Home'>
 > = ({ navigation }) => {
-  const { data, fetchNextPage, isLoading, isSuccess, isError } =
-    tmdb.useMoviesInfiniteQuery(tmdb.MovieQueryType.NowPlaying)
+  const {
+    data,
+    fetchNextPage,
+    isLoading,
+    isSuccess,
+    isError,
+    isFetchingNextPage,
+  } = tmdb.useMoviesInfiniteQuery(tmdb.MovieQueryType.NowPlaying)
 
-  const items = useMemo(
+  const items = useMemo<TMDBMoviesListItem[]>(
     () => (data?.pages ? data?.pages.flatMap(item => item.results) : []),
     [data?.pages],
+  )
+
+  const totalPages = useMemo<number>(
+    () => data?.pages?.[0]?.total_pages ?? 0,
+    [data],
+  )
+
+  const hasMorePages = useMemo<boolean>(
+    () => totalPages > 0 && items.length < totalPages,
+    [items.length, totalPages],
   )
 
   const createOnPressMovie =
@@ -62,6 +78,23 @@ export const MovieListScreen: React.FC<
           fetchNextPage()
         }
       }}
+      ListFooterComponent={
+        <MovieListFooter isLoading={isFetchingNextPage} isEnd={!hasMorePages} />
+      }
     />
   )
 }
+
+interface MovieListFooterProps {
+  isLoading: boolean
+  isEnd: boolean
+}
+
+export const MovieListFooter: React.FC<MovieListFooterProps> = ({
+  isLoading,
+  isEnd,
+}) => (
+  <View style={{ display: 'flex', alignContent: 'center', padding: 8 }}>
+    {isLoading && !isEnd && <ActivityIndicator />}
+  </View>
+)
